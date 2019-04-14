@@ -23,7 +23,7 @@ fill:
 text ends
 data	segment
 		symbols db 223 dup ('*')	;
-data end
+data ends
 stk		segment stack 'stack'
 		dw 128 dup(0)
 stk ends

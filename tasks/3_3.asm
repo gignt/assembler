@@ -1,73 +1,140 @@
-; Рисование окружности
+; Рисование линии по заданным координатам
 
-.386
-
-data	segment
-		x360		dd 180.0		;
-		x36			dw 360			;
-		forcolor	db 10			;
-		xc			dw 320			;
-		yc			dw 175			;
-		xc1			dd 320.0		;
-		yc1			dd 175.0		;
-		rx			dw 100			;
-		ry			dw 70			;
-		x			dw ?			;
-		y			dw ?			;
-		angl		dw 1			;
-data ends
-
-text	segment use16
+text	segment 'code'
 		assume CS:text, DS:data
 
-point	proc
-		push		cx				;
-		mov			cx,xc			;
-		mov			ah,0ch			;
-		mov			al,forcolor		;
-		mov			bh,0			;
-		fld			yc1				;
-		fistp		yc				;
-		mov			dx,yc			;
-		fld			xc1				;
-		fistp		xc				;
-		mov			cx,xc			;
-		sub			cx,x			;
-		sub			dx,y			;
-		int			10h				;
-		pop			cx				;
-		ret							;
-point endp
-
-main	proc
+main:	
 		mov			ax,data			;
-		mov			dx,ax			;
+		mov			ds,ax			;
 		mov			ah,00h			;
 		mov			al,10h			;
 		int			10h				;
-		mov			cx,x36			;
-		
 		finit						;
-		fldpi						;
-		fld			x360			;
+		fild		ix1				;
+		fild		dv				;
 		fdiv						;
-		fstp		x360			;
-do:
-		fld			x360			;
-		fild		angl			;
-		fmul						;
-		fsincos						;
-		fild		ry				;
-		fmul						;
-		fistp		y				;
-		fild		rx				;
-		fmul						;
-		fistp		x				;
-		fwait						;
-		call		point			;
-		inc			angl			;
-		loop		do				;
+		fstp		x1				;
+		fild		ix2				;
+		fild		dv				;
+		fdiv						;
+		fstp		x2				;
+		fild		iy1				;
+		fild		dv				;
+		fdiv						;
+		fstp		y1				;
+		fild		iy2				;
+		fild		dv				;
+		fdiv						;
+		fstp		y2				;
 		
+		fld			x1				;
+		fld			y2				;
+		fmul						;
+		fld			x2				;
+		fld			y1				;
+		fmul						;
+		fsub						;
+		fld			x1				;
+		fld			x2				;
+		fsub						;
+		fdiv						;
+		fild		dv				;
+		fmul						;
+		fstp		b				;
+		
+		fld			y1				;
+		fld			y2				;
+		fsub						;
+		fld			x1				;
+		fld			x2				;
+		fsub						;
+		fdiv						;
+		fstp		k				;
+		
+		mov			ax,ix1			;
+		mov			bx,ix2			;
+		cmp			ax,bx			;
+		ja			l1				;
+		sub			bx,ax			;
+		mov			cycx,bx			;
+		jmp			cont			;
+l1:
+		sub			ax,bx			;
+		mov			cycx,ax			;
+cont:
+		mov			ax,iy1			;
+		mov			bx,iy2			;
+		cmp			ax,bx			;
+		ja			l2				;
+		sub			bx,ax			;
+		mov			cycy,bx			;
+		jmp			cont1			;
+l2:
+		sub			ax,bx			;
+		mov			cycy,ax			;
+cont1:
+		mov			ax,cycx			;
+		mov			bx,cycy			;
+		cmp			ax,bx			;
+		ja			l3				;
+		mov			cx,cycy			;
+		jmp			liney			;
+l3:
+		mov			cx,cycx			;
+linex:
+		push		cx				;
+		mov			ah,0ch			;
+		mov			al,4			;
+		mov			bh,0			;
+		mov			cx,ix1			;
+		
+		fild		ix1				;
+		fld			k				;
+		fmul						;
+		fld			b				;
+		fadd						;
+		fabs						;
+		fistp		ly				;
+		
+		mov			dx,ly			;
+		int			10h				;
+		cmp			cx,ix2			;
+		ja			decc			;
+		inc			ix1				;
+		jmp			OK1				;
+decc:
+		dec			ix1				;
+OK1:
+		pop			cx				;
+		loop		linex			;
+		jmp			exit			;
+liney:
+		push		cx				;
+		mov			ah,0ch			;
+		mov			al,4			;
+		mov			bh,0			;
+		
+		fild		iy1				;
+		fld			b				;
+		fsub						;
+		fld			k				;
+		fdiv						;
+		fabs						;
+		fistp		lx				;
+		
+		mov			cx,lx			;
+		mov			dx,iy1			;
+		int			10h				;
+		cmp			dx,iy2			;
+		ja			decc1			;
+		inc			iy1				;
+		jmp			OK2				;
+decc1:
+		dec			iy1				;
+OK2:
+		pop			cx				;
+		loop		liney			;
+exit:
 		mov			ah,08h			;
 		int			21h				;
 		mov			ah,00h			;
@@ -75,10 +142,27 @@ do:
 		int			10h				;
 		mov			ax,4c00h		;
 		int			21h				;
-main endp
 text ends
 
+data	segment
+		k			dd ?			;
+		b			dd ?			;
+		y1			dd ?			;
+		x1			dd ?			;
+		x2			dd ?			;
+		y2			dd ?			;
+		ix1			dw 600			;
+		iy1			dw 100			;
+		ix2			dw 120			;
+		iy2			dw 300			;
+		dv			dw 100			;
+		cycx		dw ?			;
+		cycy		dw ?			;
+		lx			dw ?			;
+		ly			dw ?			;
+data ends
+		
 stk		segment stack 'stack'
-		dw 128 duo(0)
+		dw 128 dup(0)
 stk ends
 	end main

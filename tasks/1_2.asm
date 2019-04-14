@@ -14,6 +14,6 @@ begin:
 text ends
 
 data	segment
-		message db 'Hello world!$	;
+		message db 'Hello world!$'	;
 data ends
 	end begin

@@ -6,7 +6,7 @@ text	segment 'code'
 main:
 		mov		ax,data				;
 		mov		ds,ax				;
-		mov		ah,3d02h			;
+		mov		ax,3d02h			;
 		mov		dx,offset filename	;
 		int		21h					;
 		jc		error				;

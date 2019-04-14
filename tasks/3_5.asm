@@ -1,84 +1,47 @@
-; Рисование окружности
+; Вывод звукового сигнала на PC speaker
 
-.386
-
-data	segment
-		x360		dd 180.0		;
-		x36			dw 360			;
-		forcolor	db 10			;
-		xc			dw 320			;
-		yc			dw 175			;
-		xc1			dd 320.0		;
-		yc1			dd 175.0		;
-		rx			dw 100			;
-		ry			dw 70			;
-		x			dw ?			;
-		y			dw ?			;
-		angl		dw 1			;
-data ends
-
-text	segment use16
+text	segment 'code'
 		assume CS:text, DS:data
 
-point	proc
-		push		cx				;
-		mov			cx,xc			;
-		mov			ah,0ch			;
-		mov			al,forcolor		;
-		mov			bh,0			;
-		fld			yc1				;
-		fistp		yc				;
-		mov			dx,yc			;
-		fld			xc1				;
-		fistp		xc				;
-		mov			cx,xc			;
-		sub			cx,x			;
-		sub			dx,y			;
-		int			10h				;
-		pop			cx				;
-		ret							;
-point endp
-
-main	proc
+begin:	
 		mov			ax,data			;
-		mov			dx,ax			;
-		mov			ah,00h			;
-		mov			al,10h			;
-		int			10h				;
-		mov			cx,x36			;
+		mov			ds,ax			;
+		mov			al,0B6h			;
+		out			43h,al			;
+		in			al,61h			;
+		or			al,3			;
+		out			61h,al			;
+		mov			cx,50			;
+snd:	
+		push		cx				;
+		mov			ax,tone			;
+		out			42h,al			;
+		mov			al,ah			;
+		out			42h,al			;
+		mov			cx,15			;
+delay:
+		push		cx				;
+		mov			cx,65535		;
+		loop		$				;
+		mov			cx,65535		;
+		loop		$				;
+		pop			cx				;
+		add			tone,50			;
+		loop		snd				;
 		
-		finit						;
-		fldpi						;
-		fld			x360			;
-		fdiv						;
-		fstp		x360			;
-do:
-		fld			x360			;
-		fild		angl			;
-		fmul						;
-		fsincos						;
-		fild		ry				;
-		fmul						;
-		fistp		y				;
-		fild		rx				;
-		fmul						;
-		fistp		x				;
-		fwait						;
-		call		point			;
-		inc			angl			;
-		loop		do				;
+		in			al,61h			;
+		and			al,0FCh			;
+		out			61h,al			;
 		
-		mov			ah,08h			;
-		int			21h				;
-		mov			ah,00h			;
-		mov			al,03h			;
-		int			10h				;
 		mov			ax,4c00h		;
 		int			21h				;
-main endp
 text ends
 
+data	segment
+		tone		dw 3000			;
+data ends
+		
 stk		segment stack 'stack'
-		dw 128 duo(0)
+		dw 128 dup(0)
 stk ends
-	end main
+	end begin

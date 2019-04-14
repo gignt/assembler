@@ -79,6 +79,6 @@ main endp
 text ends
 
 stk		segment stack 'stack'
-		dw 128 duo(0)
+		dw 128 dup(0)
 stk ends
 	end main

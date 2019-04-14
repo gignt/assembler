@@ -26,7 +26,7 @@ ReadCh:
 		sub		al,'0'				;
 		xor		ah,ah				;
 		mov		cx,ax				;
-		mov		ah,di				;
+		mov		ax,di				;
 		mov		bx,10				;
 		mul		bx					;
 		add		ax,cx				;

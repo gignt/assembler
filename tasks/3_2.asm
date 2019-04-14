@@ -3,7 +3,7 @@
 text	segment use16
 		assume CS:text, DS:data
 
-main	
+main:	
 		mov			ax,data			;
 		mov			ds,ax			;
 		mov			ah,00h			;
@@ -75,7 +75,7 @@ cont:
 		mov			ax,iy1			;
 		mov			bx,iy2			;
 		cmp			ax,bx			;
-		ja			12				;
+		ja			l2				;
 		sub			bx,ax			;
 		mov			cycy,bx			;
 		jmp			cont1			;
@@ -86,7 +86,7 @@ cont1:
 		mov			ax,cycx			;
 		mov			bx,cycy			;
 		cmp			ax,bx			;
-		ja			13				;
+		ja			l3				;
 		mov			cx,cycy			;
 		jmp			liney			;
 l3:
