@@ -45,7 +45,7 @@ text ends
 data 	segment
 		inbuf		db 80 dup(' ')					;
 		handle		dw ?							;
-		filename	db 'C:\data.txt',0				;
+		filename	db 'Y:\data.txt',0				;
 		mes1		db 'File not found$'			;
 		mes2		db 'Directory does not exist$'	;
 data ends

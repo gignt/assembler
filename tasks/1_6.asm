@@ -14,7 +14,7 @@ begin:
 		mov		dx,offset inbuf		;
 		int		21h					;
 		mov		actlen,ax			;
-		mov		ax,40h				;
+		mov		ah,40h				;
 		mov		bx,1				;
 		mov		cx,actlen			;
 		mov		dx,offset inbuf		;

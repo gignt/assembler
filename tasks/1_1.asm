@@ -8,7 +8,7 @@ begin:
 		mov		ah,09h				;
 		mov		dx,offset message	;
 		int		21h					;
-		mov		ax,4ch				;
+		mov		ah,4ch				;
 		mov		al,00h				;
 		int		21h					;
 		

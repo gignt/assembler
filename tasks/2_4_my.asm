@@ -24,7 +24,7 @@ main:
 text ends
 
 data 	segment
-		buf		 db '<<String writed to file>>'	;
+		buf		 db '<<String writed to file. My string!>>'	;
 		buflen	 equ $-buf						;
 		handle	 dw ?							;
 		filename db 'Y:\data.txt',0				;

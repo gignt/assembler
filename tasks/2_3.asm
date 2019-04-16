@@ -1,7 +1,7 @@
 ; ввод чисел и преобразовние их в символьную строку
 
 text	segment 'code'
-	EXTRN BinToAscDec:proc
+	EXTERN BinToAscDec:proc			;
 		assume CS:text, DS:data
 		
 main:

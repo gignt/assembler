@@ -4,7 +4,7 @@ text	segment 'code'
 		assume CS:text, DS:data
 		
 draw	proc
-		mov		ax,0ch			;
+		mov		ah,0ch			;
 		mov		al,color		;
 		mov		bh,vpage		;
 		mov		cx,x			;
